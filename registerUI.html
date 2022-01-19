@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>登入</title>
+
+<style>
+    #main {
+        border: 1px solid black;
+        background-color: white;
+        width: 380px;
+        height: 220px;
+        position: absolute;
+        text-align: center;
+        padding-top: 30px;
+    }
+    #login {
+        background-color: 	silver;
+        width: 225px;
+    }
+</style>
+
+<script type="text/javascript">
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var main;
+    window.onload=function() {
+        main = document.getElementById("main");
+        main.style.left = (w-380)*0.5 + "px";
+        main.style.top = (h-200)*0.5 + "px";
+    };
+</script>
+
+</head>
+
+<body style="background-color:	gold">
+    <div id="main" style="background-color:	#F5F5F5">
+        <a>新用戶註冊</a><br/><br/>
+        <form method="post" action="control.php?act=addUser">
+        帳號:&emsp;<input id="userName" type="text" name="userName"><br/><br/>
+        密碼:&emsp;<input id="pwd" name="pwd" type="text"><br/><br/>
+        <input type="submit" id="login" value="送出"><br/><br/>
+        </form>
+    </div>
+</body>
+</html>
