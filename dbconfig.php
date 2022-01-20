@@ -1,5 +1,4 @@
 <?php
-session_start();
 /*
 連線資料庫用的副程式
 */
@@ -11,20 +10,4 @@ $dbName = 'guess'; //使用的資料庫名稱
 $db = mysqli_connect($host, $user, $pass, $dbName) or die('Error with MySQL connection'); //跟MyMSQL連線並登入
 
 mysqli_query($db,"SET NAMES utf8"); //設定編碼為 unicode utf8
-
-function checkAccessRole($reqRole) {
-	if (isset($_SESSION['role']) and $_SESSION['role']==$reqRole) {
-		return True;
-	} else {
-		return False;
-	}
-}
-
-function checkAccess($reqLevel) {
-	if (isset($_SESSION['role']) and $_SESSION['role'] >= $reqLevel) {
-		return True;
-	} else {
-		return False;
-	}
-}
 ?>

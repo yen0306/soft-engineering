@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>莊家</title>
+
+<style>
+    #main {
+        border: 1px solid black;
+        background-color: white;
+        width: 380px;
+        height: 240px;
+        position: absolute;
+        text-align: center;
+        padding-top: 10px;
+    }
+    h3 {
+        padding-top: 20px;
+    }
+    #answer {
+        width: 15px;
+        height: 15px;
+    }
+    select {
+        vertical-align:middle;
+        font-size: 14pt;
+        font-family: times new roman;
+    }
+</style>
+
+<script type="text/javascript">
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var main;
+    window.onload=function() {
+        main = document.getElementById("main");
+        main.style.left = (w-380)*0.5 + "px";
+        main.style.top = (h-200)*0.5 + "px";
+    };
+</script>
+</head>
+
+<body style="background-color:	#55AA00">
+    <div id="main" style="background-color:	#F5F5F5">
+        <h3>請選擇要設定的數字</h3><br/>
+        <form method="post" id="form" action="control.php?act=addRoom">
+            <div>
+                <select name="answer">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div><br />
+            <button type="submit" id="btn">確定</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 require("model.php");
 
 if (isset($_REQUEST['act'])) {
@@ -22,7 +23,9 @@ switch ($act) {
     case "login":
         $userName = $_POST['userName'];
         $pwd = $_POST['pwd'];
-        if (getUser($userName) == $pwd) {
+        $list = getUser($userName);
+        $_SESSION['userName'] = $list['userName'];
+        if ($list['pwd'] == $pwd) {
             header("Location: selectUI.html");
             break;
         } else {
@@ -30,6 +33,14 @@ switch ($act) {
             echo "<script>window.location.href='loginUI.html';</script>";
             break;
         }
+    case "getRank":
+        $rankList = getRank();
+        echo json_encode($rankList);
+        break;
+    case "addRoom":
+        $answer = (int)$_POST['answer'];
+        addRoom($_SESSION['userName'], $answer);
+        echo "ok";
     default;
 }
 ?>
