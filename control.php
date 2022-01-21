@@ -39,8 +39,13 @@ switch ($act) {
         break;
     case "addRoom":
         $answer = (int)$_POST['answer'];
-        addRoom($_SESSION['userName'], $answer);
-        echo "ok";
+        addRoom($_SESSION['userName'], $answer, $type);
+        header("Location: draw.html");
+        break;
+    case "getRoom":
+        $answer = getRoom($_SESSION['userName']);
+        echo json_encode($answer);
+        break;
     default;
 }
 ?>

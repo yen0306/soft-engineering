@@ -27,20 +27,30 @@ function getRank() {
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $retArr=array();
-	while (	$rs = mysqli_fetch_assoc($result)) {
-		$tArr=array();
-		$tArr['userName']=$rs['userName'];
-		$tArr['money']=$rs['money'];
+    while ($rs = mysqli_fetch_assoc($result)) {
+        $tArr=array();
+        $tArr['userName']=$rs['userName'];
+        $tArr['money']=$rs['money'];
         $retArr[] = $tArr;
-	}
-	return $retArr;
+    }
+    return $retArr;
 }
-function addRoom($userName, $answer) {
+function addRoom($userName, $answer, $type=0) {
     global $db;
     $sql = "insert into room (userName, answer) values(?, ?)";
     $stmt = mysqli_prepare($db, $sql);
     mysqli_stmt_bind_param($stmt, "si", $userName, $answer);
     mysqli_stmt_execute($stmt);
     return true;
+}
+function getRoom($userName) {
+    global $db;
+    $sql = "select * from room where userName = ?";
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $userName);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $rs = mysqli_fetch_assoc($result);
+    return $rs;
 }
 ?>

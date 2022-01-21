@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="keywords" content=" " />
+<meta name="description" content=" " />
+<title>開獎</title>
+</head>
+
+<style>
+    #main {
+        border: 1px solid black;
+        background-color: white;
+        width: 380px;
+        height: 230px;
+        position: absolute;
+        text-align: center;
+        padding-top: 10px;
+    }
+    a {
+        font-size: 2em;
+    }
+</style>
+
+<script>
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var main;
+    window.onload = function() {
+        main = document.getElementById("main");
+        main.style.left = (w-380)*0.5 + "px";
+        main.style.top = (h-280)*0.5 + "px";
+        fetch("control.php?act=getRoom")
+        .then(function(resp){
+            console.log(resp);
+            return resp.json();
+        })
+        .then(function(json) {
+            if (json) {
+                let answer = "<h3>你選擇的數字</h3><br/>";
+                    answer += "<a style='color:blue'>" + json['answer'] + "</a><br/><br/>";
+                    answer += "<button id='btn' onclick='location.href=\"result.html\"'>開獎</button>";
+                    document.getElementById("main").innerHTML = answer;
+            }
+        })
+    };
+</script>
+
+<body style="background-color:	#55AA00">
+    <div id="main" style="background-color:	#F5F5F5"></div>
+</body>
+</html>
