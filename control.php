@@ -46,6 +46,10 @@ switch ($act) {
         $answer = getAnswer($_SESSION['userName']);
         echo json_encode($answer);
         break;
+    case "getRoom" :
+        $room = getRoom();
+        echo json_encode($room);
+        break;
     default;
 }
 ?>
