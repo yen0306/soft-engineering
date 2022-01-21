@@ -43,7 +43,7 @@ function addRoom($userName, $answer, $type=0) {
     mysqli_stmt_execute($stmt);
     return true;
 }
-function getRoom($userName) {
+function getAnswer($userName) {
     global $db;
     $sql = "select * from room where userName = ?";
     $stmt = mysqli_prepare($db, $sql);

@@ -30,7 +30,7 @@
         main = document.getElementById("main");
         main.style.left = (w-380)*0.5 + "px";
         main.style.top = (h-280)*0.5 + "px";
-        fetch("control.php?act=getRoom")
+        fetch("control.php?act=getAnswer")
         .then(function(resp){
             console.log(resp);
             return resp.json();
