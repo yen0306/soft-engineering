@@ -7,6 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <title>玩家</title>
+</head>
 
 <style>
     #main {
@@ -26,9 +27,24 @@
         font-size: 18pt;
         font-family: times new roman;
     }
+    #room {
+      text-align: center;
+      position: absolute;
+      padding-top: 30px;
+      padding-left: 20px;
+      font-size: 2em;
+    }
+    #showMoney {
+      text-align: center;
+      padding-top: 30px;
+    }
 </style>
 
 <script type="text/javascript">
+    var url = location.href;
+    var splitURL = url.split("=");
+    var rid = splitURL[1];
+    var room = "<h1 style='color: red'>" + rid + "號房間</h1>";
     var w = window.innerWidth;
     var h = window.innerHeight;
     var main;
@@ -36,16 +52,24 @@
         main = document.getElementById("main");
         main.style.left = (w-380)*0.5 + "px";
         main.style.top = (h-200)*0.5 + "px";
+        document.getElementById("room").innerHTML = room;
+        document.getElementById("rid").value = rid;
+        fetch("control.php?act=getUser")
+        .then(function(resp) {
+          console.log(resp);
+          return resp.json();
+        })
+        .then(function(json) {
+            if (json) {
+                let money = "<h2 style='color: #F9F900'>你的餘額:  " + json['money'] + "</h2>";
+                document.getElementById("showMoney").innerHTML = money;
+            }
+        })
     };
-    function print() {
-        let i = 1;
-        document.getElementById("main") = 1;
-    }
 </script>
-</head>
 
 <body style="background-color:	#55AA00">
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark" id="navbar">
         <!--  這是 LOGO 文字或圖片  -->
         <a class="navbar-brand" href="selectUI.html">老子沒錢</a>
         <!--  這是手機版時右上角呈現的選單按鈕, 注意:data-target表示按下這個按鈕時要控制展開收合的物件ID名稱  -->
@@ -73,20 +97,23 @@
           </ul>
         </div>
       </nav>
+    <div id="room"></div><br/><br/><br/><br/>
+    <div id="showMoney"></div>
     <div id="main" style="background-color:	#F5F5F5">
         <h3>請選擇要下注的數字和金額</h3><br/>
         <form method="post" id="form" action="control.php?act=addPlayer">
             <div>
-                <select name="betNum">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
+              <input type="hidden" id="rid" name="rid">
+                <select id="betNum" name="betNum">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                 </select>
                 <input id="betMoney" name="betMoney">
             </div><br />
-            <button type="submit" id="btn"s>確定</button>
+            <button id="btn" onclick="postForm()">確定</button>
         </form>
     </div>
 </body>

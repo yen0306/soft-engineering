@@ -4,49 +4,86 @@
 <meta charset="UTF-8" />
 <meta name="keywords" content=" " />
 <meta name="description" content=" " />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <title>開獎</title>
 </head>
 
 <style>
     #main {
-        border: 1px solid black;
-        background-color: white;
-        width: 380px;
-        height: 230px;
+        background-color: #DCDCDC;
         position: absolute;
         text-align: center;
-        padding-top: 10px;
+        padding-top: 200px;
+    }
+    #showPlayer {
+        background-color: green;
+        position: absolute;
+        text-align: center;
+        padding-top: 200px;
     }
     a {
-        font-size: 2em;
+        font-size: 3em;
     }
+    button {
+        font-size: 30px;
+    }
+    body {overflow-y:hidden;} 
 </style>
 
 <script>
     var w = window.innerWidth;
     var h = window.innerHeight;
     var main;
+    var showPlayer;
     window.onload = function() {
         main = document.getElementById("main");
-        main.style.left = (w-380)*0.5 + "px";
-        main.style.top = (h-280)*0.5 + "px";
+        main.style.width = (w*0.5) + "px";
+        main.style.height = h + "px";
+        main.style.left = 0 + "px";
+        main.style.top = 0 + "px";
         fetch("control.php?act=getAnswer")
         .then(function(resp){
+            // console.log(resp);
+            return resp.json();
+        })
+        .then(function(json) {
+            if (json) {
+                let answer = "<h1>你選擇的數字</h1><br/>";
+                    answer += "<a style='color:blue'>" + json['answer'] + "</a><br/><br/><br/>";
+                    answer += "<button id='btn' onclick='location.href=\"result.html\"'>開獎</button>";
+                    document.getElementById("main").innerHTML = answer;
+            }
+        })
+        showPlayer = document.getElementById("showPlayer");
+        showPlayer.style.width = (w*0.5) + "px";
+        showPlayer.style.height = h + "px";
+        showPlayer.style.right = 0 + "px";
+        showPlayer.style.top = 0 + "px";
+        fetch("control.php?act=getPlayer")
+        .then(function(resp) {
             console.log(resp);
             return resp.json();
         })
         .then(function(json) {
             if (json) {
-                let answer = "<h3>你選擇的數字</h3><br/>";
-                    answer += "<a style='color:blue'>" + json['answer'] + "</a><br/><br/>";
-                    answer += "<button id='btn' onclick='location.href=\"result.html\"'>開獎</button>";
-                    document.getElementById("main").innerHTML = answer;
+                let player = "<table class='table'>";
+                player += "<thead class='thead-dark'>";
+                player += "<tr><th scope='col'>已下注玩家</th></tr></thead><tbody>";
+                for (let row of json) {
+                    player += "<tr><th scope='row'>" + row['userName'] + "</th></tr>";
+                }
+                player += "</tbody></table>";
+                document.getElementById("showPlayer").innerHTML = player;
             }
         })
     };
 </script>
 
-<body style="background-color:	#55AA00">
-    <div id="main" style="background-color:	#F5F5F5"></div>
+<body scroll="no">
+    <div id="main"></div>
+    <div id="showPlayer"></div>
 </body>
 </html>

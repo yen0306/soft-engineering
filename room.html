@@ -42,7 +42,7 @@
                 tableStr += "<thead class='thead-dark'>";
                 tableStr += "<tr><th scope='col'>可選擇的房間</th><tbody>";
                 for (let row of json) {
-                    tableStr += "<tr><th scope='row'><a href='#'>room" + row['rid'] + "</a></th>";
+                    tableStr += "<tr><th scope='row'><a href='player.html?rid=" + row['rid'] + "'>room" + row['rid'] + "</a></th>";
                 }
                 tableStr += "</tbody><table>";
                 document.getElementById("main").innerHTML = tableStr;
