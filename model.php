@@ -64,6 +64,7 @@ function getRoom() {  // 得到房間及莊家資訊
         $tArr=array();
         $tArr['rid']=$rs['rid'];
         $tArr['userName']=$rs['userName'];
+        $tArr['differ'] = $rs['differ'];
         $retArr[] = $tArr;
     }
     return $retArr;
@@ -89,6 +90,7 @@ function getPlayer($userName) {  // 得到在那間房間有下注的玩家資�
         $tArr['userName']=$rs['userName'];
         $tArr['betMoney']=$rs['betMoney'];
         $tArr['betNum'] = $rs['betNum'];
+        $tArr['differ'] = $rs['differ'];
         $retArr[] = $tArr;
     }
     return $retArr;
