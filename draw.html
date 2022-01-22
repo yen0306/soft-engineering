@@ -80,6 +80,12 @@
             }
         })
     };
+    function draw() {
+        fetch("control.php?act=draw")
+        .then(function(resp) {
+            console.log(resp);
+        }) 
+    }
 </script>
 
 <body scroll="no">

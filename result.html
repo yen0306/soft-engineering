@@ -28,7 +28,27 @@
         main = document.getElementById("main");
         main.style.left = (w-380)*0.5 + "px";
         main.style.top = (h-200)*0.5 + "px";
-        fetch("control.php?act=")
+        fetch("control.php?act=getDiffer&type=0")
+        .then(function(resp) {
+          console.log(resp);
+          return resp.json();
+        })
+        .then(function(json) {
+          if (json) {
+            for (let row of json) {
+              if (Number(row['difference']) > 0) {
+                let tableStr = "<h2>你贏了" + json['difference'] + "元<h2>";
+                document.getElementById("main").innerHTML = tableStr;
+              } else if (Number(row['difference']) < 0) {
+                let tableStr = "<h2>你輸了" + json['difference'] + "元<h2>";
+                document.getElementById("main").innerHTML = tableStr;
+              } else {
+                let tableStr = "<h2>你沒輸沒贏<h2>";
+                document.getElementById("main").innerHTML = tableStr;
+              }
+            }
+          }
+        })
     };
 </script>
 
@@ -49,14 +69,11 @@
           <!-- 這是一組靠左側的選單 -->
           <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">  <!-- 加上 dropdown, 表示擁有下一層收合展開的子選單 ********** -->
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">進入遊戲</a>  <!-- a連結加上 dropdown-toggle 及相關的屬性 ********** -->
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">開始新遊戲</a>  <!-- a連結加上 dropdown-toggle 及相關的屬性 ********** -->
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">  <!-- 子選單的 div ********** -->
                 <a class="dropdown-item" href="banker.html">莊家</a>
                 <a class="dropdown-item" href="room.html">玩家</a>
               </div>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="loginUI.html">登出</a>
             </li>
           </ul>
         </div>

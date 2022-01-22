@@ -53,7 +53,7 @@ function getAnswer($userName) {  // 得到莊家設定的數字
     $rs = mysqli_fetch_assoc($result);
     return $rs;
 }
-function getRoom() {  // 得到房間資訊
+function getRoom() {  // 得到房間及莊家資訊
     global $db;
     $sql = "select * from room where status = 0";
     $stmt = mysqli_prepare($db, $sql);
@@ -92,5 +92,69 @@ function getPlayer($userName) {  // 得到在那間房間有下注的玩家資�
         $retArr[] = $tArr;
     }
     return $retArr;
+}
+function bankerWin($betMoney, $bankerName, $playerName) {
+    global $db;
+    $sql = "select * from user where userName = ?";  // 得到莊家錢包餘額
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $bankerName);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $rs = mysqli_fetch_assoc($result);
+
+    $sql = "update user set money = ?+? where userName = ?";  // 莊家加錢
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "iis", $rs['money'], $betMoney, $bankerName);
+    mysqli_stmt_execute($stmt);
+
+    $sql = "select * from user where userName = ?";  // 得到玩家錢包餘額
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $playerName);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $rs = mysqli_fetch_assoc($result);
+
+    $sql = "update user set money = ?-? where userName = ?";  // 玩家扣錢
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "iis", $rs['money'], $betMoney, $playerName);
+    mysqli_stmt_execute($stmt);
+
+    $sql = "update room set status = 1";  // 房間不見
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_execute($stmt);
+
+    return true;
+}
+function bankerLose($betMoney, $bankerName, $playerName) {
+    global $db;
+    $sql = "select * from user where userName = ?";  // 得到莊家錢包餘額
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $bankerName);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $rs = mysqli_fetch_assoc($result);
+
+    $sql = "update user set money = ?-(5*?) where userName = ?";  // 莊家扣錢
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "iis", $rs['money'], $betMoney, $bankerName);
+    mysqli_stmt_execute($stmt);
+
+    $sql = "select * from user where userName = ?";  // 得到玩家錢包餘額
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $playerName);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $rs = mysqli_fetch_assoc($result);
+
+    $sql = "update user set money = ?+(5*?) where userName = ?";  // 玩家加錢
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "iis", $rs['money'], $betMoney, $playerName);
+    mysqli_stmt_execute($stmt);
+
+    $sql = "update room set status = 1";  // 房間不見
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_execute($stmt);
+
+    return true;
 }
 ?>
