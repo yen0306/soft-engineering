@@ -53,7 +53,7 @@
             if (json) {
                 let answer = "<h1>你選擇的數字</h1><br/>";
                     answer += "<a style='color:blue'>" + json['answer'] + "</a><br/><br/><br/>";
-                    answer += "<button id='btn' onclick='location.href=\"result.html\"'>開獎</button>";
+                    answer += "<button id='btn' onclick='draw();location.href=\"result.html\"'>開獎</button>";
                     document.getElementById("main").innerHTML = answer;
             }
         })

@@ -55,7 +55,7 @@ function getAnswer($userName) {  // 得到莊家設定的數字
 }
 function getRoom() {  // 得到房間資訊
     global $db;
-    $sql = "select * from room";
+    $sql = "select * from room where status = 0";
     $stmt = mysqli_prepare($db, $sql);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -88,6 +88,7 @@ function getPlayer($userName) {  // 得到在那間房間有下注的玩家資�
         $tArr=array();
         $tArr['userName']=$rs['userName'];
         $tArr['betMoney']=$rs['betMoney'];
+        $tArr['betNum'] = $rs['betNum'];
         $retArr[] = $tArr;
     }
     return $retArr;

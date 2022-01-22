@@ -56,17 +56,22 @@ switch ($act) {
         break;
     case "addPlayer":  // 新增玩家資訊
         $betNum = (int)$_POST['betNum'];
-        $betMoney = (int)$_POST['betMoney'];
+        $betMoney = $_POST['betMoney'];
         $rid = (int)$_POST['rid'];
         $list = getUser($_SESSION['userName']);
-        if ($list['money'] >= $betMoney) {
-            addPlayer($_SESSION['userName'], $betNum, $betMoney, $rid);
-            header("Location: wait.html?rid=" . (string)$rid);
-            break;
+        if ($betMoney != "") {
+            if ($list['money'] >= (int)$betMoney) {
+                    addPlayer($_SESSION['userName'], (int)$betNum, $betMoney, $rid);
+                    header("Location: wait.html?rid=" . (string)$rid);
+                    break;
+            } else {
+                echo "<script type='text/javascript'>alert('餘額不足');</script>";
+                echo "<script>window.location.href='player.html?rid=" . (string)$rid . "';</script>";
+                break;
+            }
         } else {
-            echo "<script type='text/javascript'>alert('餘額不足');</script>";
+            echo "<script type='text/javascript'>alert('請填寫下注金額');</script>";
             echo "<script>window.location.href='player.html?rid=" . (string)$rid . "';</script>";
-            break;
         }
     case "getPlayer":  // 得到在那間房間有下注的玩家資訊
         $list = getPlayer($_SESSION['userName']);
