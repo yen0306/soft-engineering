@@ -35,7 +35,7 @@ function getRank() {  // 得到排行榜
     }
     return $retArr;
 }
-function addRoom($userName, $answer, $type=0) {  // 新稱房間使用者
+function addRoom($userName, $answer) {  // 新稱房間使用者
     global $db;
     $sql = "insert into room (userName, answer) values(?, ?)";
     $stmt = mysqli_prepare($db, $sql);
@@ -64,10 +64,29 @@ function getRoom() {  // 得到房間及莊家資訊
         $tArr=array();
         $tArr['rid']=$rs['rid'];
         $tArr['userName']=$rs['userName'];
-        $tArr['differ'] = $rs['differ'];
         $retArr[] = $tArr;
     }
     return $retArr;
+}
+function getPlayer($userName) {
+    global $db;
+    $sql = "select * from player where userName = ?";
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $userName);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $rs = mysqli_fetch_assoc($result);
+    return $rs;
+}
+function getBanker($userName) {  // 得到贏或輸多少錢
+    global $db;
+    $sql = "select * from room where userName = ?";
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $userName);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $rs = mysqli_fetch_assoc($result);
+    return $rs;
 }
 function addPlayer($userName, $betNum, $betMoney, $rid) {  // 新增玩家資訊
     global $db;
@@ -77,7 +96,7 @@ function addPlayer($userName, $betNum, $betMoney, $rid) {  // 新增玩家資訊
     mysqli_stmt_execute($stmt);
     return true;
 }
-function getPlayer($userName) {  // 得到在那間房間有下注的玩家資訊
+function getRoomPlayer($userName) {  // 得到在那間房間有下注的玩家資訊
     global $db;
     $sql = "select * from player where rid = (select rid from room where userName = ?)";
     $stmt = mysqli_prepare($db, $sql);
@@ -90,7 +109,6 @@ function getPlayer($userName) {  // 得到在那間房間有下注的玩家資�
         $tArr['userName']=$rs['userName'];
         $tArr['betMoney']=$rs['betMoney'];
         $tArr['betNum'] = $rs['betNum'];
-        $tArr['differ'] = $rs['differ'];
         $retArr[] = $tArr;
     }
     return $retArr;
@@ -109,6 +127,11 @@ function bankerWin($betMoney, $bankerName, $playerName) {
     mysqli_stmt_bind_param($stmt, "iis", $rs['money'], $betMoney, $bankerName);
     mysqli_stmt_execute($stmt);
 
+    $sql = "update room set differ = differ+? where userName = ?";  // 更新莊家差額
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "is", $betMoney, $bankerName);
+    mysqli_stmt_execute($stmt);
+
     $sql = "select * from user where userName = ?";  // 得到玩家錢包餘額
     $stmt = mysqli_prepare($db, $sql);
     mysqli_stmt_bind_param($stmt, "s", $playerName);
@@ -119,6 +142,11 @@ function bankerWin($betMoney, $bankerName, $playerName) {
     $sql = "update user set money = ?-? where userName = ?";  // 玩家扣錢
     $stmt = mysqli_prepare($db, $sql);
     mysqli_stmt_bind_param($stmt, "iis", $rs['money'], $betMoney, $playerName);
+    mysqli_stmt_execute($stmt);
+
+    $sql = "update player set differ = differ-? where userName = ?";  // 更新玩家差額
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "is", $betMoney, $playerName);
     mysqli_stmt_execute($stmt);
 
     $sql = "update room set status = 1";  // 房間不見
@@ -141,6 +169,11 @@ function bankerLose($betMoney, $bankerName, $playerName) {
     mysqli_stmt_bind_param($stmt, "iis", $rs['money'], $betMoney, $bankerName);
     mysqli_stmt_execute($stmt);
 
+    $sql = "update room set differ = differ-(5*?) where userName = ?";  // 更新莊家差額
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "is", $betMoney, $bankerName);
+    mysqli_stmt_execute($stmt);
+
     $sql = "select * from user where userName = ?";  // 得到玩家錢包餘額
     $stmt = mysqli_prepare($db, $sql);
     mysqli_stmt_bind_param($stmt, "s", $playerName);
@@ -151,6 +184,11 @@ function bankerLose($betMoney, $bankerName, $playerName) {
     $sql = "update user set money = ?+(5*?) where userName = ?";  // 玩家加錢
     $stmt = mysqli_prepare($db, $sql);
     mysqli_stmt_bind_param($stmt, "iis", $rs['money'], $betMoney, $playerName);
+    mysqli_stmt_execute($stmt);
+
+    $sql = "update player set differ = differ+(5*?) where userName = ?";  // 更新玩家差額
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "is", $betMoney, $playerName);
     mysqli_stmt_execute($stmt);
 
     $sql = "update room set status = 1";  // 房間不見

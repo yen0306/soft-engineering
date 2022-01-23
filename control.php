@@ -51,8 +51,16 @@ switch ($act) {
         break;
     case "addRoom":  // 新增房間資訊
         $answer = (int)$_POST['answer'];
-        addRoom($_SESSION['userName'], $answer, $type);
+        addRoom($_SESSION['userName'], $answer);
         header("Location: draw.html");
+        break;
+    case "getBanker":  // 得到莊家資訊
+        $differ = getBanker($_SESSION['userName']);
+        echo json_encode($differ);
+        break;
+    case "getPlayer":  // 
+        $player = getPlayer($_SESSION['userName']);
+        echo json_encode($player);
         break;
     case "getAnswer":  // 得到莊家設定的數字
         $answer = getAnswer($_SESSION['userName']);
@@ -81,13 +89,13 @@ switch ($act) {
             echo "<script type='text/javascript'>alert('請填寫下注金額');</script>";
             echo "<script>window.location.href='player.html?rid=" . (string)$rid . "';</script>";
         }
-    case "getPlayer":  // 得到在那間房間有下注的玩家資訊
-        $list = getPlayer($_SESSION['userName']);
+    case "getRoomPlayer":  // 得到在那間房間有下注的玩家資訊
+        $list = getRoomPlayer($_SESSION['userName']);
         echo json_encode($list);
         break;
-    case "draw":
+    case "draw":  // 開獎
         $answer = getAnswer($_SESSION['userName']);
-        $numList = getPlayer($_SESSION['userName']);
+        $numList = getRoomPlayer($_SESSION['userName']);
         for ($i = 0; $i < count($numList); $i++) {
             if ($answer['answer'] == $numList[$i]['betNum']) {
                 bankerLose($numList[$i]['betMoney'], $_SESSION['userName'], $numList[$i]['userName']);

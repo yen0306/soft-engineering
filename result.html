@@ -16,68 +16,42 @@
         height: 230px;
         position: absolute;
         text-align: center;
-        padding-top: 10px;
+        padding-top: 45px;
     }
+
 </style>
 
 <script>
     var w = window.innerWidth;
     var h = window.innerHeight;
     var main;
+    var tableStr;
     window.onload = function() {
         main = document.getElementById("main");
         main.style.left = (w-380)*0.5 + "px";
         main.style.top = (h-200)*0.5 + "px";
-        fetch("control.php?act=getDiffer&type=0")
+        fetch("control.php?act=getBanker")
         .then(function(resp) {
           console.log(resp);
           return resp.json();
         })
         .then(function(json) {
           if (json) {
-            for (let row of json) {
-              if (Number(row['difference']) > 0) {
-                let tableStr = "<h2>你贏了" + json['difference'] + "元<h2>";
-                document.getElementById("main").innerHTML = tableStr;
-              } else if (Number(row['difference']) < 0) {
-                let tableStr = "<h2>你輸了" + json['difference'] + "元<h2>";
-                document.getElementById("main").innerHTML = tableStr;
-              } else {
-                let tableStr = "<h2>你沒輸沒贏<h2>";
-                document.getElementById("main").innerHTML = tableStr;
-              }
+            if (json['differ'] > 0) {
+              tableStr = "<h2>你贏了" + json['differ'] + "元&#129297;<h2>";
+            } else if (json['differ'] < 0) {
+              tableStr = "<h2>你輸了" + json['differ']*(-1) + "元&#128546;<h2>";
+            } else {
+              tableStr = "<h2>你沒輸沒贏&#128529;<h2>";
             }
+            tableStr += "<br/><a href='selectUI.html'>返回大廳</a>";
+            document.getElementById("main").innerHTML = tableStr;
           }
         })
     };
 </script>
 
 <body style="background-color:	#55AA00">
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark" id="navbar">
-        <!--  這是 LOGO 文字或圖片  -->
-        <a class="navbar-brand" href="selectUI.html">老子沒錢</a>
-        <!--  這是手機版時右上角呈現的選單按鈕, 注意:data-target表示按下這個按鈕時要控制展開收合的物件ID名稱  -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <!-- 這是按鈕上呈現的icon圖案 -->
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <!-- navbar-collapse表示這個框架區塊是可收展開的, 注意:id名稱必須跟button中的data-target一樣 -->
-        <!-- 左右二組選單要分散到二邊時, 方法(1)父層加justify-content-between的class名稱  -->
-        <!-- 左右二組選單要分散到二邊時, 方法(2)子層左側選單組加mr-auto的class名稱  -->
-        <!-- 左右二組選單要分散到二邊時, 方法(3)子層右側選單組加ml-auto的class名稱  -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <!-- 這是一組靠左側的選單 -->
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">  <!-- 加上 dropdown, 表示擁有下一層收合展開的子選單 ********** -->
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">開始新遊戲</a>  <!-- a連結加上 dropdown-toggle 及相關的屬性 ********** -->
-              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">  <!-- 子選單的 div ********** -->
-                <a class="dropdown-item" href="banker.html">莊家</a>
-                <a class="dropdown-item" href="room.html">玩家</a>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </nav>
-      <div id="main" style="background-color:	#F5F5F5"></div>
+  <div id="main" style="background-color:	#F5F5F5"></div>
 </body>
 </html>

@@ -28,15 +28,36 @@
     var w = window.innerWidth;
     var h = window.innerHeight;
     var main;
+    var tableStr;
     window.onload = function() {
         main = document.getElementById("main");
         main.style.left = (w-380)*0.5 + "px";
         main.style.top = (h-200)*0.5 + "px";
+        fetch("control.php?act=getPlayer")
+        .then(function(resp) {
+            console.log(resp);
+            return resp.json();
+        })
+        .then(function(json) {
+            if (json) {
+                let p = document.getElementById("waitResult");
+                p.style.display = "none";
+                if (json['differ'] > 0) {
+                    tableStr = "<br/><h2>你贏了" + json['differ'] + "元&#129297;<h2>";
+                } else if (json['differ'] < 0) {
+                    tableStr = "<br/><h2>你輸了" + json['differ']*(-1) + "元&#128546;<h2>";
+                } else {
+                    tableStr = "<br/><h2>你沒輸沒贏&#128529;<h2>";
+                }
+                tableStr += "<br/><br/><a href='selectUI.html'>返回大廳</a>";
+                document.getElementById("main").innerHTML = tableStr;
+            }
+        })
     };
 </script>
 
 <body style="background-color: #55AA00">
-    <p>等待開獎結果...</p>
+    <p id="waitResult">等待開獎結果...</p>
     <div id="main" style="background-color:	#F5F5F5"></div>
 </body>
 </html>

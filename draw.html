@@ -62,7 +62,7 @@
         showPlayer.style.height = h + "px";
         showPlayer.style.right = 0 + "px";
         showPlayer.style.top = 0 + "px";
-        fetch("control.php?act=getPlayer")
+        fetch("control.php?act=getRoomPlayer")
         .then(function(resp) {
             console.log(resp);
             return resp.json();
