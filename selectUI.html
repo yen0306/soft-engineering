@@ -40,6 +40,7 @@
         .then(function(json) {
           if (json) {
             let name = "<h1 style='color: #0000E3'>Hello, " + json['userName'] + "</h1>";
+            name += "<h1 style='color:  #0000E3'>錢包餘額: " + json['money'] + "</h1>";
             document.getElementById("showName").innerHTML = name;
           }
         })
