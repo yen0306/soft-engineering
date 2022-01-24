@@ -44,11 +44,17 @@
             } else {
               tableStr = "<h2>你沒輸沒贏&#128529;<h2>";
             }
-            tableStr += "<br/><a href='selectUI.html'>返回大廳</a>";
+            tableStr += "<br/><a href='selectUI.html' onclick='delRoom()'>返回大廳</a>";
             document.getElementById("main").innerHTML = tableStr;
           }
         })
     };
+    function delRoom() {
+      fetch("control.php?act=delRoom")
+      .then(function(resp) {
+            console.log(resp);
+      })
+    }
 </script>
 
 <body style="background-color:	#55AA00">

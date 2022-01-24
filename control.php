@@ -33,14 +33,6 @@ switch ($act) {
             echo "<script>window.location.href='loginUI.html';</script>";
             break;
         }
-        /*$rankList = getRank();
-        print_r($rankList);
-        echo count($rankList);
-        print_r($rankList[0]);
-        for ($i = 0; $i < count($rankList); $i++) {
-            print($rankList[$i]['money']);
-        }
-        break;*/
     case "getUser":  // 得到使用者資訊
         $list = getUser($_SESSION['userName']);
         echo json_encode($list);
@@ -103,6 +95,14 @@ switch ($act) {
                 bankerWin($numList[$i]['betMoney'], $_SESSION['userName'], $numList[$i]['userName']);
             }
         }
+        echo "OK";
+        break;
+    case "delRoom":  // 刪除房間
+        delRoom($_SESSION['userName']);
+        echo "OK";
+        break;
+    case "delPlayer":
+        delPlayer($_SESSION['userName']);
         echo "OK";
         break;
     default;

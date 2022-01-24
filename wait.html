@@ -41,19 +41,31 @@
         .then(function(json) {
             if (json) {
                 let p = document.getElementById("waitResult");
-                p.style.display = "none";
                 if (json['differ'] > 0) {
                     tableStr = "<br/><h2>你贏了" + json['differ'] + "元&#129297;<h2>";
+                    p.style.display = "none";
+                    tableStr += "<br/><br/><a href='selectUI.html' onclick='delPlayer()'>返回大廳</a>";
+                    document.getElementById("main").innerHTML = tableStr;
                 } else if (json['differ'] < 0) {
                     tableStr = "<br/><h2>你輸了" + json['differ']*(-1) + "元&#128546;<h2>";
-                } else {
+                    p.style.display = "none";
+                    tableStr += "<br/><br/><a href='selectUI.html' onclick='delPlayer()'>返回大廳</a>";
+                    document.getElementById("main").innerHTML = tableStr;
+                } else if(json['differ'] = 0) {
                     tableStr = "<br/><h2>你沒輸沒贏&#128529;<h2>";
+                    p.style.display = "none";
+                    tableStr += "<br/><br/><a href='selectUI.html' onclick='delPlayer()'>返回大廳</a>";
+                    document.getElementById("main").innerHTML = tableStr;
                 }
-                tableStr += "<br/><br/><a href='selectUI.html'>返回大廳</a>";
-                document.getElementById("main").innerHTML = tableStr;
             }
         })
     };
+    function delPlayer() {
+        fetch("control.php?act=delPlayer")
+        .then(function(resp) {
+            console.log(resp);
+        })
+    }
 </script>
 
 <body style="background-color: #55AA00">

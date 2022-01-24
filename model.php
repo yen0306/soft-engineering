@@ -68,7 +68,7 @@ function getRoom() {  // 得到房間及莊家資訊
     }
     return $retArr;
 }
-function getPlayer($userName) {
+function getPlayer($userName) {  // // 得到玩家贏或輸多少錢
     global $db;
     $sql = "select * from player where userName = ?";
     $stmt = mysqli_prepare($db, $sql);
@@ -78,7 +78,7 @@ function getPlayer($userName) {
     $rs = mysqli_fetch_assoc($result);
     return $rs;
 }
-function getBanker($userName) {  // 得到贏或輸多少錢
+function getBanker($userName) {  // 得到莊家贏或輸多少錢
     global $db;
     $sql = "select * from room where userName = ?";
     $stmt = mysqli_prepare($db, $sql);
@@ -144,7 +144,7 @@ function bankerWin($betMoney, $bankerName, $playerName) {
     mysqli_stmt_bind_param($stmt, "iis", $rs['money'], $betMoney, $playerName);
     mysqli_stmt_execute($stmt);
 
-    $sql = "update player set differ = differ-? where userName = ?";  // 更新玩家差額
+    $sql = "update player set differ = 0-? where userName = ?";  // 更新玩家差額
     $stmt = mysqli_prepare($db, $sql);
     mysqli_stmt_bind_param($stmt, "is", $betMoney, $playerName);
     mysqli_stmt_execute($stmt);
@@ -186,13 +186,31 @@ function bankerLose($betMoney, $bankerName, $playerName) {
     mysqli_stmt_bind_param($stmt, "iis", $rs['money'], $betMoney, $playerName);
     mysqli_stmt_execute($stmt);
 
-    $sql = "update player set differ = differ+(5*?) where userName = ?";  // 更新玩家差額
+    $sql = "update player set differ = 0+(5*?) where userName = ?";  // 更新玩家差額
     $stmt = mysqli_prepare($db, $sql);
     mysqli_stmt_bind_param($stmt, "is", $betMoney, $playerName);
     mysqli_stmt_execute($stmt);
 
     $sql = "update room set status = 1";  // 房間不見
     $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_execute($stmt);
+
+    return true;
+}
+function delRoom($userName) {
+    global $db;
+    $sql = "delete from room where userName = ?";
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $userName);
+    mysqli_stmt_execute($stmt);
+
+    return true;
+}
+function delPlayer($userName) {
+    global $db;
+    $sql = "delete from player where userName = ?";
+    $stmt = mysqli_prepare($db, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $userName);
     mysqli_stmt_execute($stmt);
 
     return true;
